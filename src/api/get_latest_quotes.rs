@@ -61,7 +61,7 @@ pub struct Usd {
     pub percent_change_7d: f64,
     pub percent_change_30d: f64,
     pub market_cap: f64,
-    pub market_cap_dominance: u32,
+    pub market_cap_dominance: f64,
     pub fully_diluted_market_cap: f64,
     pub last_updated: String,
 }
@@ -72,7 +72,11 @@ pub struct Platform {
     // Define fields for the platform data if needed
 }
 
-pub async fn get_latest_quotes(api_key: &str, symbols: &str) -> Result<ApiResponse> {
+pub async fn get_latest_quotes(
+    api_key: &str,
+    symbols: &str,
+    base_url: &str,
+) -> Result<ApiResponse> {
     let query_params = QueryParams {
         id: None,
         convert: Some("USD".to_string()),
@@ -81,7 +85,7 @@ pub async fn get_latest_quotes(api_key: &str, symbols: &str) -> Result<ApiRespon
 
     let client = reqwest::Client::new();
     let response = client
-        .get(API_URL_BASE.to_owned() + "/v1/cryptocurrency/quotes/latest")
+        .get(base_url.to_owned() + "/v1/cryptocurrency/quotes/latest")
         .header("X-CMC_PRO_API_KEY", api_key)
         .header("Accept", "application/json")
         // .header("Accept-Encoding", "deflate, gzip")

@@ -36,7 +36,7 @@ pub struct Usd {
     pub price: f64,
 }
 
-pub async fn get_latest_listings(api_key: &str) -> Result<ApiResponse> {
+pub async fn get_latest_listings(api_key: &str, base_url: &str) -> Result<ApiResponse> {
     let query_params = QueryParams {
         start: 1,
         limit: 5000,
@@ -45,7 +45,7 @@ pub async fn get_latest_listings(api_key: &str) -> Result<ApiResponse> {
 
     let client = reqwest::Client::new();
     let response = client
-        .get(API_URL_BASE.to_owned() + "/v1/cryptocurrency/listings/latest")
+        .get(base_url.to_owned() + "/v1/cryptocurrency/listings/latest")
         .header("X-CMC_PRO_API_KEY", api_key)
         .header("Accept", "application/json")
         .header("Accept-Encoding", "deflate, gzip")
