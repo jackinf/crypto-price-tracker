@@ -3,9 +3,15 @@ use derive_more::From;
 
 pub type Result<T> = core::result::Result<T, Error>;
 
+#[allow(dead_code)]
 #[derive(Debug, From)]
 pub enum Error {
-    Something,
+    Config(String),
+    #[from]
+    Request(reqwest::Error),
+    #[from]
+    JsonParse(serde_json::Error),
+    Api(String),
 }
 
 impl core::fmt::Display for Error {
