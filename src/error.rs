@@ -1,5 +1,5 @@
-use std::fmt::Formatter;
 use derive_more::From;
+use std::fmt::Formatter;
 
 pub type Result<T> = core::result::Result<T, Error>;
 
@@ -12,6 +12,7 @@ pub enum Error {
     #[from]
     JsonParse(serde_json::Error),
     Api(String),
+    NoSymbols,
 }
 
 impl core::fmt::Display for Error {

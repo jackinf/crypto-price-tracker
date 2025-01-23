@@ -2,7 +2,6 @@ mod api;
 mod cli;
 mod config;
 mod error;
-mod model;
 mod prelude;
 
 use crate::config::Config;
@@ -15,15 +14,12 @@ async fn main() -> Result<()> {
     let config = Config::load()?;
     let args = cli::Args::parse_args(&config);
 
-    let symbols = args.symbols.unwrap();
-    let listings = api::get_latest_listings(&config.api_key, &symbols).await?;
+    let listings = api::get_latest_listings(&config.api_key).await?;
+    d!("{listings:?}");
 
-    for currency in listings {
-        d!(
-            "{} ({}) Price: ${:.2}",
-            currency.name, currency.symbol, currency.quote.usd.price
-        );
-    }
+    let symbols = args.symbols.ok_or(Error::NoSymbols)?;
+    let quotes = api::get_latest_quotes(&config.api_key, &symbols).await?;
+    d!("{quotes:?}");
 
     Ok(())
 }
