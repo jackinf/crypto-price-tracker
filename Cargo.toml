@@ -1,0 +1,16 @@
+[package]
+name = "crypto-price-tracker"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+derive_more = { version = "1.0.0", features = ["full"]}
+dotenv = "0.15.0"
+reqwest = { version = "0.12.12", features = ["json", "gzip"] }
+tokio = { version = "1.43.0", features = ["full"] }
+serde = { version = "1.0.217", features = ["derive"] }
+serde_json = "1.0.137"
+env_logger = "0.11.6"
+log = "0.4.25"
+clap = { version = "4.5.24", features = ["derive"] }
+clap_derive = { version = "4.5.24" }
