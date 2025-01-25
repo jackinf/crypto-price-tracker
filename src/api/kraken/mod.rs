@@ -1,9 +1,10 @@
+use std::collections::HashMap;
 use crate::api::CryptoApi;
 use crate::prelude::*;
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 
-mod auth;
+pub mod auth;
 mod common;
 mod get_latest_ticker;
 
@@ -86,22 +87,24 @@ impl CryptoApi for KrakenApi {
     }
 
     async fn check_balance(&self) -> Result<f64> {
-        let auth = auth::Auth::new(self.api_key.to_string(), self.secret_key.to_string())?;
-
         let url = "/0/private/Balance";
         let full_url = f!("{}{}", self.base_url, url);
-
+        let auth = auth::Auth::new(self.api_key.to_string(), self.secret_key.to_string())?;
         let nonce = auth.nonce();
-        let sign = auth.sign([("nonce", nonce)], url, nonce)?;
+        let signature = auth.sign([("nonce", nonce)], url, nonce)?;
+        let params = HashMap::from([("nonce", nonce.to_string())]);
 
-        let resp = reqwest::Client::new()
-            .post(&full_url)
+        let response = reqwest::Client::new()
+            .post(full_url)
             .header("API-Key", auth.api_key_header)
-            .header("API-Sign", sign)
+            .header("API-Sign", signature)
+            .form(&params)
             .send()
             .await?;
 
-        let json: serde_json::Value = resp.json().await?;
+        let json: serde_json::Value = response.json().await?;
+
+        d!("{json:?}");
 
         let balance: BalanceResultRoot = serde_json::from_value(json)?;
         Ok(balance.result.usdt.parse::<f64>()?)

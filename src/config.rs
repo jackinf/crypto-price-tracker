@@ -17,25 +17,32 @@ impl Config {
     pub fn load() -> Result<Self> {
         dotenv().ok(); // Load .env file if it exists
 
+        // Coinmarketcap
+
         let cmc_api_key = env::var("CPT_COINMARKETCAP_API")
             .map_err(|_| Error::EnvNotSet("CPT_COINMARKETCAP_API".to_string()))?;
 
         let cmc_base_url = env::var("CPT_COINMARKETCAP_BASE_URL")
             .map_err(|_| Error::EnvNotSet("CPT_COINMARKETCAP_BASE_URL".to_string()))?;
 
+        // Binance
+
         let binance_api_key = env::var("CPT_BINANCE_API_KEY")
             .map_err(|_| Error::EnvNotSet("CPT_BINANCE_API_KEY".to_string()))?;
 
-        let binance_private_key = env::var("CPT_KRAKEN_API_SECRET")
-            .map_err(|_| Error::EnvNotSet("CPT_KRAKEN_API_SECRET".to_string()))?;
+        let binance_private_key = env::var("CPT_BINANCE_API_SECRET")
+            .map_err(|_| Error::EnvNotSet("CPT_BINANCE_API_SECRET".to_string()))?;
+
+        // Kraken
 
         let kraken_api_key = env::var("CPT_KRAKEN_API_KEY")
             .map_err(|_| Error::EnvNotSet("CPT_KRAKEN_API_KEY".to_string()))?;
 
-        let kraken_private_key = env::var("CPT_BINANCE_API_SECRET")
-            .map_err(|_| Error::EnvNotSet("CPT_BINANCE_API_SECRET".to_string()))?;
+        let kraken_private_key = env::var("CPT_KRAKEN_API_SECRET")
+            .map_err(|_| Error::EnvNotSet("CPT_KRAKEN_API_SECRET".to_string()))?;
 
         // Load default symbols, perhaps from an environment variable or config file
+
         let default_symbols = env::var("DEFAULT_SYMBOLS")
             .unwrap_or_else(|_| "BTC,ETH".to_string())
             .split(',')
