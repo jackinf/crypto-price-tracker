@@ -1,5 +1,6 @@
 use base64::DecodeSliceError;
 use derive_more::From;
+use hmac::digest::InvalidLength;
 use reqwest::header::InvalidHeaderValue;
 use std::fmt::Formatter;
 
@@ -28,6 +29,8 @@ pub enum Error {
     VarError(std::env::VarError),
     #[from]
     ParseFloatError(std::num::ParseFloatError),
+    #[from]
+    Hmac2InvalidLength(InvalidLength),
 }
 
 impl core::fmt::Display for Error {

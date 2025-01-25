@@ -5,9 +5,9 @@ mod error;
 mod prelude;
 
 use crate::api::{BinanceApi, CoinmarketcapApi, CryptoApi, KrakenApi};
-use tokio::join;
 use crate::config::Config;
 use crate::prelude::*;
+use tokio::join;
 
 #[tokio::main]
 async fn main() -> Result<()> {

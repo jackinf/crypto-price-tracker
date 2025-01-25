@@ -1,8 +1,8 @@
-use std::collections::HashMap;
 use crate::api::CryptoApi;
 use crate::prelude::*;
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 pub mod auth;
 mod common;
@@ -88,15 +88,19 @@ impl CryptoApi for KrakenApi {
 
     async fn check_balance(&self) -> Result<f64> {
         let url = "/0/private/Balance";
-        let full_url = f!("{}{}", self.base_url, url);
-        let auth = auth::Auth::new(self.api_key.to_string(), self.secret_key.to_string())?;
+
+        let api_key = self.api_key.to_string();
+        let secret_key = self.secret_key.to_string();
+
+        let auth = auth::Auth::new(secret_key)?;
         let nonce = auth.nonce();
         let signature = auth.sign([("nonce", nonce)], url, nonce)?;
-        let params = HashMap::from([("nonce", nonce.to_string())]);
 
+        let full_url = f!("{}{}", self.base_url, url);
+        let params = HashMap::from([("nonce", nonce.to_string())]);
         let response = reqwest::Client::new()
             .post(full_url)
-            .header("API-Key", auth.api_key_header)
+            .header("API-Key", api_key)
             .header("API-Sign", signature)
             .form(&params)
             .send()

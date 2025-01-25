@@ -1,9 +1,6 @@
-use crypto_price_tracker::{
-    config::Config,
-    prelude::*
-};
-use crypto_price_tracker::api::KrakenApi;
 use crypto_price_tracker::api::CryptoApi;
+use crypto_price_tracker::api::KrakenApi;
+use crypto_price_tracker::{config::Config, prelude::*};
 
 #[tokio::main]
 async fn main() -> Result<()> {
