@@ -70,11 +70,6 @@ struct BalanceResultRoot {
     pub result: BalanceResult,
 }
 
-#[derive(Serialize, Deserialize)]
-struct CheckBalancePayload {
-    nonce: String,
-}
-
 #[async_trait]
 impl CryptoApi for KrakenApi {
     async fn get_latest_quotes(&self, symbol: &str) -> Result<f64> {
@@ -94,14 +89,10 @@ impl CryptoApi for KrakenApi {
         let auth = auth::Auth::new(self.api_key.to_string(), self.secret_key.to_string())?;
 
         let url = "/0/private/Balance";
-        let full_url = f!("{}{}", self.base_url, url.to_string());
+        let full_url = f!("{}{}", self.base_url, url);
 
         let nonce = auth.nonce();
-        let payload = CheckBalancePayload {
-            nonce: nonce.to_string(),
-        };
-
-        let sign = auth.sign(payload, url, nonce)?;
+        let sign = auth.sign([("nonce", nonce)], url, nonce)?;
 
         let resp = reqwest::Client::new()
             .post(&full_url)

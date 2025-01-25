@@ -73,8 +73,8 @@ pub struct Platform {
 
 pub async fn get_latest_quotes(
     api_key: &str,
-    symbols: &str,
     base_url: &str,
+    symbols: &str,
 ) -> Result<ApiResponse> {
     let query_params = QueryParams {
         id: None,

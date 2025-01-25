@@ -21,19 +21,19 @@ impl Config {
             .map_err(|_| Error::EnvNotSet("CPT_COINMARKETCAP_API".to_string()))?;
 
         let cmc_base_url = env::var("CPT_COINMARKETCAP_BASE_URL")
-            .map_err(|_| Error::EnvNotSet("CPT_COINMARKETCAP_API".to_string()))?;
+            .map_err(|_| Error::EnvNotSet("CPT_COINMARKETCAP_BASE_URL".to_string()))?;
 
         let binance_api_key = env::var("CPT_BINANCE_API_KEY")
             .map_err(|_| Error::EnvNotSet("CPT_BINANCE_API_KEY".to_string()))?;
 
-        let binance_private_key = env::var("CPT_BINANCE_PRIVATE_KEY")
-            .map_err(|_| Error::EnvNotSet("CPT_BINANCE_PRIVATE_KEY".to_string()))?;
+        let binance_private_key = env::var("CPT_KRAKEN_API_SECRET")
+            .map_err(|_| Error::EnvNotSet("CPT_KRAKEN_API_SECRET".to_string()))?;
 
         let kraken_api_key = env::var("CPT_KRAKEN_API_KEY")
             .map_err(|_| Error::EnvNotSet("CPT_KRAKEN_API_KEY".to_string()))?;
 
-        let kraken_private_key = env::var("CPT_KRAKEN_PRIVATE_KEY")
-            .map_err(|_| Error::EnvNotSet("CPT_KRAKEN_PRIVATE_KEY".to_string()))?;
+        let kraken_private_key = env::var("CPT_BINANCE_API_SECRET")
+            .map_err(|_| Error::EnvNotSet("CPT_BINANCE_API_SECRET".to_string()))?;
 
         // Load default symbols, perhaps from an environment variable or config file
         let default_symbols = env::var("DEFAULT_SYMBOLS")

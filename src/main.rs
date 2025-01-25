@@ -6,16 +6,15 @@ mod prelude;
 
 use crate::api::{BinanceApi, CoinmarketcapApi, CryptoApi, KrakenApi};
 use tokio::join;
-// use crate::api::API_URL_BASE;
 use crate::config::Config;
 use crate::prelude::*;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("debug")).init();
+    env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info")).init();
 
     let config = Config::load()?;
-    let args = cli::Args::parse_args(&config);
+    let args = cli::Args::parse_args(&config); // TODO: use args - extract pairs
 
     let binance = BinanceApi::new();
     let kraken = KrakenApi::new(config.kraken_api_key, config.kraken_private_key);
