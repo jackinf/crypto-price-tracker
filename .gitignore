@@ -59,6 +59,7 @@ __pycache__/
 # -- others
 # Allows .env (make sure only dev info)
 # !.env # Commented by default
+!.env.example
 
 # Allow vscode
 # !.vscode # Commented by default

@@ -4,7 +4,9 @@ mod config;
 mod error;
 mod prelude;
 
-use crate::api::API_URL_BASE;
+use crate::api::{BinanceApi, CoinmarketcapApi, CryptoApi, KrakenApi};
+use tokio::join;
+// use crate::api::API_URL_BASE;
 use crate::config::Config;
 use crate::prelude::*;
 
@@ -15,12 +17,31 @@ async fn main() -> Result<()> {
     let config = Config::load()?;
     let args = cli::Args::parse_args(&config);
 
-    let listings = api::get_latest_listings(&config.api_key, API_URL_BASE).await?;
-    d!("{listings:?}");
+    let binance = BinanceApi::new();
+    let kraken = KrakenApi::new(config.kraken_api_key, config.kraken_private_key);
+    let coinmarketcap = CoinmarketcapApi::new(&config.cmc_base_url, &config.cmc_api_key);
 
-    let symbols = args.symbols.ok_or(Error::NoSymbols)?;
-    let quotes = api::get_latest_quotes(&config.api_key, &symbols, API_URL_BASE).await?;
-    d!("{quotes:?}");
+    let (binance_price, kraken_price, coinmarketcap_price) = join!(
+        binance.get_latest_quotes("BTCUSDT"),
+        kraken.get_latest_quotes("BTC/USDT"),
+        coinmarketcap.get_latest_quotes("BTC")
+    );
+
+    match (binance_price, kraken_price, coinmarketcap_price) {
+        (Ok(b_price), Ok(k_price), Ok(cmc_price)) => {
+            println!("Binance BTC price: {}", b_price);
+            println!("Kraken BTC price: {}", k_price);
+            println!("Coinmarketcap BTC price: {}", cmc_price);
+        }
+        (Err(b_err), Err(k_err), Err(cmc_price)) => {
+            println!("Binance error: {}", b_err);
+            println!("Kraken error: {}", k_err);
+            println!("Coinmarketcap error: {}", cmc_price);
+        }
+        (Err(b_err), _, _) => println!("Binance error: {}", b_err),
+        (_, Err(k_err), _) => println!("Kraken error: {}", k_err),
+        (_, _, Err(cmc_err)) => println!("Coinmarketcap error: {}", cmc_err),
+    }
 
     Ok(())
 }

@@ -1,4 +1,6 @@
+use base64::DecodeSliceError;
 use derive_more::From;
+use reqwest::header::InvalidHeaderValue;
 use std::fmt::Formatter;
 
 pub type Result<T> = core::result::Result<T, Error>;
@@ -7,12 +9,25 @@ pub type Result<T> = core::result::Result<T, Error>;
 #[derive(Debug, From)]
 pub enum Error {
     Config(String),
+    EnvNotSet(String),
     #[from]
     Request(reqwest::Error),
     #[from]
     JsonParse(serde_json::Error),
+    ApiPayloadParseError,
     Api(String),
     NoSymbols,
+    #[from]
+    SignDecodeError(DecodeSliceError),
+    #[from]
+    SignInvalidHeaderError(InvalidHeaderValue),
+    NewError,
+    #[from]
+    SerdeUrlEncodedError(serde_urlencoded::ser::Error),
+    #[from]
+    VarError(std::env::VarError),
+    #[from]
+    ParseFloatError(std::num::ParseFloatError),
 }
 
 impl core::fmt::Display for Error {

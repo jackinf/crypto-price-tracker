@@ -1,5 +1,4 @@
-use crate::api::common::Status;
-use crate::api::API_URL_BASE;
+use crate::api::coinmarketcap::common::Status;
 use crate::prelude::*;
 use reqwest;
 use serde::{Deserialize, Serialize};

@@ -1,5 +1,4 @@
-use crate::api::common::Status;
-use crate::api::API_URL_BASE;
+use crate::api::coinmarketcap::common::Status;
 use crate::prelude::*;
 use reqwest;
 use serde::{Deserialize, Serialize};
@@ -85,7 +84,7 @@ pub async fn get_latest_quotes(
 
     let client = reqwest::Client::new();
     let response = client
-        .get(base_url.to_owned() + "/v1/cryptocurrency/quotes/latest")
+        .get(base_url.to_owned() + "/cryptocurrency/quotes/latest")
         .header("X-CMC_PRO_API_KEY", api_key)
         .header("Accept", "application/json")
         // .header("Accept-Encoding", "deflate, gzip")
@@ -105,6 +104,6 @@ pub async fn get_latest_quotes(
     let crypto_data: ApiResponse = response.json().await?;
 
     d!("{crypto_data:?}");
-    // todo!();
+
     Ok(crypto_data)
 }

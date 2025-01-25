@@ -1,10 +1,17 @@
-mod common;
-mod get_latest_listings;
-mod get_latest_listings_test;
-mod get_latest_quotes;
-mod get_latest_quotes_test;
+use async_trait::async_trait;
 
-pub const API_URL_BASE: &str = "https://sandbox-api.coinmarketcap.com";
+mod binance;
+mod coinmarketcap;
+mod kraken;
+use crate::prelude::*;
 
-pub use get_latest_listings::*;
-pub use get_latest_quotes::*;
+#[async_trait]
+pub trait CryptoApi {
+    async fn get_latest_quotes(&self, symbol: &str) -> Result<f64>;
+    async fn check_balance(&self) -> Result<f64>;
+    async fn get_symbols(&self) -> Result<Vec<String>>;
+}
+
+pub use binance::*;
+pub use coinmarketcap::*;
+pub use kraken::*;
